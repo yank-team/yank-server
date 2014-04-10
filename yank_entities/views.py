@@ -17,17 +17,21 @@ class EntityLocation(View):
         arg_lat    = request.POST['lat']
         arg_lng    = request.POST['lng']
         arg_radius = request.POST['radius']
-
+        
         # TODO: Assert max radius
 
         # Filter relevant entities
         qset_entity = YEntity.objects.filter(
             lat__gte=arg_lat-arg_radius
-        )
-        .filter(
-            lat__lte=arg_lat+arg_radius
+        ).filter(
+            lng__lte=arg_lng+arg_radius
         )
 
+        resp = [
+            x
+            for x in qset_entity
+        ]
+
         # TODO: test and serialize
-        return HttpResponse('[]')
+        return HttpResponse(json.dumps(resp))
 
