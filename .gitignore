@@ -51,3 +51,12 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
+ 
+;;extensions to ignore
+*.log
+*.pot
+*.pyc
+ 
+;;directories to ignore
+.idea/
+
