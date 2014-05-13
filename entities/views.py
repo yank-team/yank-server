@@ -77,13 +77,9 @@ def list_entities_inside_radius(request, radius='5'):
         user = YankUser.objects.get(api_key=data['apik'])
     except ObjectDoesNotExist:
         return HttpResponse('given API key is invalid', 403)
-
-    # TODO: calculate radius using the haversine formula -- I'm way too 
-    # tired to do this right now, so FIDLAR ~Nick W.~
-
-    radius = int(radius) # BLAH BLAH BLAH SHITTY MATH --> radius
-
+        
     # Calculate acceptable variation in degrees from the haversine formula
+    radius = int(radius) 
     threshold = math.degrees(globe_distance_angle_threshold(radius))
 
     # now we let Django construct a SQL statement that will filter out the 
