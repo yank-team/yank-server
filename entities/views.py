@@ -5,8 +5,9 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
 
-from yank_server.helpers import screen_methods, screen_attrs, std_response
-import json
+from yank_server.helpers import screen_methods, screen_attrs, std_response \
+    globe_distance_angle_threshold
+import math, json
 
 
 @csrf_exempt
@@ -82,14 +83,17 @@ def list_entities_inside_radius(request, radius='5'):
 
     radius = int(radius) # BLAH BLAH BLAH SHITTY MATH --> radius
 
+    # Calculate acceptable variation in degrees from the haversine formula
+    threshold = math.degrees(globe_distance_angle_threshold(radius))
+
     # now we let Django construct a SQL statement that will filter out the 
     # relevant data for us.
     entities = Entity.objects.filter(
-            lat__lte=data['lat']+radius,
-            lng__lte=data['lng']+radius 
+            lat__lte=data['lat']+threshold,
+            lng__lte=data['lng']+threshold 
         ).filter(
-            lat__gte=data['lat']-radius,
-            lng__gte=data['lng']-radius 
+            lat__gte=data['lat']-threshold,
+            lng__gte=data['lng']-threshold 
         )
 
     # The cool part of this is that these filters can catch the whole thing in

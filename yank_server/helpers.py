@@ -53,7 +53,18 @@ def haversine(lats, lngs):
     return a + b*c
 
 def distance_between_globe_coords(point_a, point_b):
+    """
+    take two points as input. Output is the distance between them
+    """
     earth_radius = 6378.1
-    lats = (point_a[0], point_b[0])
-    lngs = (point_b[1], point_b[1])
+    lats = (math.radians(point_a[0]), math.radians(point_b[0]))
+    lngs = (math.radians(point_b[1]), math.radians(point_b[1]))
     return 2*earth_radius*math.asin(math.sqrt(haversine(lats, lngs)))
+
+def globe_distance_angle_threshold(point, distance):
+    """
+    calculate an angle threshold (in radians) for a given distance from a given 
+    point. 
+    """
+    earth_radius = 6378.1
+    return haversin(distance/earth_radius)
