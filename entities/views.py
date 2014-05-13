@@ -5,8 +5,9 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
 
-from yank_server.helpers import screen_methods, screen_attrs, std_response \
-    globe_distance_angle_threshold
+from yank_server.helpers import screen_methods, screen_attrs, std_response
+from entities.helpers import globe_distance_angle_threshold
+
 import math, json
 
 
