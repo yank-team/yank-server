@@ -60,3 +60,5 @@ docs/_build/
 ;;directories to ignore
 .idea/
 
+# exclude SQLite database
+*.sqlite3
