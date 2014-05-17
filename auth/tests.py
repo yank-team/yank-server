@@ -13,6 +13,4 @@ class YankUserTestCase(TestCase):
     def test_api_key_starts_at_none(self):
         user = YankUser.objects.get(username="user")
         self.assertEqual(user.api_key, None)
-
-    def test_user_login(self):
         

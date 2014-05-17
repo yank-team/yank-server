@@ -135,3 +135,10 @@ def logout(request):
     user.save()
 
     return HttpResponse('success')
+
+@csrf_exempt
+def verify_apik(request):
+    """
+
+    """
+    
