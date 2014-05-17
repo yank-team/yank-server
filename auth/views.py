@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
 from auth.models import YankUser
 from base64 import b64encode
+from yank_server.helpers import std_response
 
 import os, json, bcrypt
 
@@ -30,6 +31,7 @@ def list_user(request):
     elif request.method != 'POST':
         return HttpResponse('method not allowed', status=405)
 
+    # TODO: decorator to ensure a certain value for Content-Type header
     data = json.loads(request.read())
 
     if 'username' not in data or 'password' not in data:
@@ -135,3 +137,38 @@ def logout(request):
     user.save()
 
     return HttpResponse('success')
+
+@csrf_exempt
+def verify_apik(request):
+    """
+    verifies a given API key from the client -- allows the client to check a stored APIK against its online counterpart
+    for consistency.
+    """
+    if request.method != 'POST':
+        return HttpResponse(status=405)
+
+    data = json.loads(request.read())
+
+    try:
+        user = YankUser.get(id__exact=data['uid'])
+    except ObjectDoesNotExist as e:
+        jsonresponse = std_response(msg='valid apik', success=True, data=None)
+        return HttpResponse(status=404, jsonresponse)
+
+    # verify that the APIK is not taken -- if it is, just boot the user and
+    # keep on truckin'
+
+    if user.api_key == None:
+        jsonresponse = std_response(msg='no apik', success=False, data=None)
+        return HttpResponse(status=404, jsonresponse)
+
+    elif user.api_key == data['apik']:
+        return HttpResponse(std_response(msg='valid apik', success=True, data=None))
+
+    # boot user
+    user.api_key = None
+    user.save()
+
+    # keep on truckin'
+    jsonresponse = std_response(msg='invalid apik', success=False, data=None)
+    return HttpResponse(status=403, jsonresponse)

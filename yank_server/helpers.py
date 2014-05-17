@@ -2,6 +2,7 @@
 yank_server.helpers
 various helper functions to make development easier
 """
+import json
 
 def screen_methods(request, methods=['GET']):
     """
@@ -29,8 +30,8 @@ def std_response(msg="", success=True, data=None):
     constructs a standard response dictionary to be translated into JSON and
     given back in an HTTP response
     """
-    return {
+    return json.dumps({
         'success': success,
         'msg'    : msg,
         'data'   : data
-    }
+    })
