@@ -141,8 +141,8 @@ def logout(request):
 @csrf_exempt
 def verify_apik(request):
     """
-    verifies a given API key from the client -- allows the client to check a stored APIK against its online counterpart
-    for consistency.
+    verifies a given API key from the client -- allows the client to check a 
+    stored APIK against its online counterpart for consistency.
     """
     if request.method != 'POST':
         return HttpResponse(status=405)
@@ -153,14 +153,14 @@ def verify_apik(request):
         user = YankUser.get(id__exact=data['uid'])
     except ObjectDoesNotExist as e:
         jsonresponse = std_response(msg='valid apik', success=True, data=None)
-        return HttpResponse(status=404, jsonresponse)
+        return HttpResponse(jsonresponse, status=404)
 
     # verify that the APIK is not taken -- if it is, just boot the user and
     # keep on truckin'
 
     if user.api_key == None:
         jsonresponse = std_response(msg='no apik', success=False, data=None)
-        return HttpResponse(status=404, jsonresponse)
+        return HttpResponse(jsonresponse, status=404)
 
     elif user.api_key == data['apik']:
         return HttpResponse(std_response(msg='valid apik', success=True, data=None))
