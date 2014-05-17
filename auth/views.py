@@ -171,4 +171,4 @@ def verify_apik(request):
 
     # keep on truckin'
     jsonresponse = std_response(msg='invalid apik', success=False, data=None)
-    return HttpResponse(status=403, jsonresponse)
+    return HttpResponse( jsonresponse, status=403)
