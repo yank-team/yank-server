@@ -17,6 +17,7 @@ def list_user(request):
     if request.method == 'GET':
         # List users -- this is a DEBUG method. We need to get rid of it after
         # we have a working product
+        # TODO: remove this for production
         users = YankUser.objects.all()
         ret = [
             {
@@ -51,7 +52,9 @@ def list_user(request):
             api_key=None
             )
         user.save()
-        return HttpResponse('success')
+
+
+        return HttpResponse(std_response(msg='user created', success=True, data=None))
 
     # User exists -- abort
     return HttpResponse('user exists', status=403)
@@ -109,9 +112,10 @@ def authenticate(request):
         # Save the key
         user.api_key = apik
         user.save()
+        ret['uid']  = user.id
         ret['apik'] = apik
-
-        return HttpResponse(json.dumps(ret))
+        
+        return HttpResponse(std_response(msg='logged in', success=True, data=ret))
 
 @csrf_exempt
 def logout(request):
@@ -171,4 +175,4 @@ def verify_apik(request):
 
     # keep on truckin'
     jsonresponse = std_response(msg='invalid apik', success=False, data=None)
-    return HttpResponse( jsonresponse, status=403)
+    return HttpResponse(jsonresponse, status=403)
