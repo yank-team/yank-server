@@ -154,7 +154,7 @@ def verify_apik(request):
     data = json.loads(request.read())
 
     try:
-        user = YankUser.get(id__exact=data['uid'])
+        user = YankUser.objects.get(id__exact=data['uid'])
     except ObjectDoesNotExist as e:
         jsonresponse = std_response(msg='valid apik', success=True, data=None)
         return HttpResponse(jsonresponse, status=404)
