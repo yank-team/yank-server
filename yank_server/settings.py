@@ -9,15 +9,16 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-import os
+import os, json
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '(ukt-foe)1jvwo-0b^nut+h1v+mwzyt)_)8p9n@jjgx(6(5t@!'
+fsecret = open(BASE_DIR+'../../SECRET/django_key')
+SECRET_KEY = fsecret.read()
+fsecret.close()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -49,12 +50,9 @@ WSGI_APPLICATION = 'yank_server.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
+db_cfg = open(BASE_DIR+'../../SECRET/db_config.json')
+DATABASES = json.loads(db_config.read())
+db_config.close()
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
