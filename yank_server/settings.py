@@ -50,7 +50,7 @@ WSGI_APPLICATION = 'yank_server.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
-db_cfg = open(BASE_DIR+'/../SECRET/db_config.json')
+db_config = open(BASE_DIR+'/../SECRET/db_config.json')
 DATABASES = json.loads(db_config.read())
 db_config.close()
 
