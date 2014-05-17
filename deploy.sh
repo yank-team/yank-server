@@ -2,7 +2,7 @@
 
 # pull from github
 echo "pulling from repo"
-git pull origin master
+git pull origin $1
 
 # deploy apache configuration
 echo "update apache config"
