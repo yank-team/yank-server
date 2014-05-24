@@ -118,7 +118,7 @@ def authenticate(request):
         ret['apik'] = apik
 
         # Serialize return data as a standard response
-        res = std_response(success=True, data=json.dumps(ret))
+        res = std_response(success=True, data=ret)
         return HttpResponse(res)
 
 @csrf_exempt
