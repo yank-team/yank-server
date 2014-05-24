@@ -3,6 +3,7 @@ from auth.models import YankUser
 
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import View
 from django.core.exceptions import ObjectDoesNotExist
 
 from yank_server.helpers import screen_methods, screen_attrs, std_response
@@ -11,51 +12,38 @@ from entities.helpers import globe_distance_angle_threshold
 import math, json
 
 
-@csrf_exempt
-def list_entities(request):
-    """
-    displays a list of entities
-    """
-    if not screen_methods(request, ['GET', 'POST']):
-        return HttpResponse(status=405)
+class EntityView(View):
 
-    # create a new entity
-    if request.method == 'POST':
+    # Generate a list of entities
+    @csrf_exempt
+    def get(self, request):
+        res = std_response(success=True, data=[
+            {'id': x.id, 'name': x.name, 'lat': x.lat, 'lng': x.lng}
+            for x in Entity.objects.all()
+        ])
+        return HttpResponse(res)
+
+    def post(self, request):
 
         data = json.loads(request.read())
 
-        # check given attributes
-        if not screen_attrs(data, ['apik', 'name', 'lat', 'lng']):
-            return HttpResponse('improperly formatted request', status=400)
-
-        # ensure this is a valid user
         try:
             user = YankUser.objects.get(api_key=data['apik'])
-        except ObjectDoesNotExist:
-            return HttpResponse('given API key is invalid', 403)
 
-        # TODO: rudimentary check for dueling Yanks
-
-        # create and save the object
-        entity = Entity.objects.create(
-            name=data['name'],
-            lat=data['lat'],
-            lng=data['lng']
+            # create and save the object
+            entity = Entity.objects.create(
+                name=data['name'],
+                lat=data['lat'],
+                lng=data['lng']
             )
-        entity.save()
+            entity.save()
 
-        # TODO: add this entity to the given user's saved list
+            res = std_response(success=true, data={'eid': entity.id})
+            return HttpResponse(res)
 
-        return HttpResponse('success')
-
-    # DEFAULT list extant entities
-    entities = Entity.objects.all()
-    ret      = [
-        {'id': x.id, 'name': x.name, 'lat': x.lat, 'lng': x.lng}
-        for x in entities
-    ]
-    return HttpResponse(json.dumps(ret))
-
+        except ObjectDoesNotExist:
+            res = std_response(success=False, msg='apik not supplied')
+            return HttpResponse(res, 403)
 
 @csrf_exempt
 def list_entities_inside_radius(request, radius='5'):

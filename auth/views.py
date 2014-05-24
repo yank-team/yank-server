@@ -28,14 +28,14 @@ def list_user(request):
         return HttpResponse(json.dumps(ret))
 
     elif request.method != 'POST':
-        res = std_response(success=False, msg="method not allowed")
+        res = std_response(success=False, msg='method not allowed')
         return HttpResponse(res, status=405)
 
     # TODO: decorator to ensure a certain value for Content-Type header
     data = json.loads(request.read())
 
     if 'username' not in data or 'password' not in data:
-        res = std_response(success=False, msg="bad request")
+        res = std_response(success=False, msg='bad request')
         return HttpResponse(std_response, status=400)
 
     # Check for user
@@ -53,11 +53,11 @@ def list_user(request):
             )
         user.save()
         
-        res = std_response(success=True, msg="success")
+        res = std_response(success=True, msg='success')
         return HttpResponse(std_response)
 
     # User exists -- abort
-    res = std_response(success=False, msg="user exists")
+    res = std_response(success=False, msg='user exists')
     return HttpResponse(res, status=403)
 
 @csrf_exempt
@@ -86,17 +86,17 @@ def authenticate(request):
 
         if bcrypt.hashpw(enc_passwd, enc_digest) != enc_digest:
             # fail on invalid password
-            res = std_response(success=False, msg="bad password") 
+            res = std_response(success=False, msg='bad password') 
             return HttpResponse(res, status=403)
 
     except ObjectDoesNotExist:
-        res = std_response(success=False, msg="user not found")
+        res = std_response(success=False, msg='user not found')
         return HttpResponse(res, status=404)
 
     # Are we logged in already?
     if user.api_key is not None:
         # If so, kill the request
-        res = std_response(success=True, msg='user already logged in')
+        res = std_response(success=True, data={'apik': user.api_key})
         return HttpResponse(res, status=403)
     
     # generate apik -- check/refresh it until it doesn't exist
