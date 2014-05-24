@@ -29,13 +29,15 @@ def list_user(request):
         return HttpResponse(json.dumps(ret))
 
     elif request.method != 'POST':
-        return HttpResponse('method not allowed', status=405)
+        res = std_response(success=False, msg="method not allowed")
+        return HttpResponse(res, status=405)
 
     # TODO: decorator to ensure a certain value for Content-Type header
     data = json.loads(request.read())
 
     if 'username' not in data or 'password' not in data:
-        return HttpResponse('bad request', status=400)
+        res = std_response(success=False, msg="bad request")
+        return HttpResponse(std_response, status=400)
 
     # Check for user
     try:
@@ -51,11 +53,13 @@ def list_user(request):
             api_key=None
             )
         user.save()
-        return HttpResponse('success')
+        
+        res = std_response(success=True, msg="success")
+        return HttpResponse(std_response)
 
     # User exists -- abort
-    return HttpResponse('user exists', status=403)
-
+    res = std_response(success=False, msg="user exists"), status=403
+    return HttpResponse(res)
 
 @csrf_exempt
 def authenticate(request):
@@ -83,15 +87,18 @@ def authenticate(request):
 
         if bcrypt.hashpw(enc_passwd, enc_digest) != enc_digest:
             # fail on invalid password
-            return HttpResponse('bad password', status=403)
+            res = std_response(success=False, msg="bad password") 
+            return HttpResponse(res, status=403)
 
     except ObjectDoesNotExist:
-        return HttpResponse('user not found', status=404)
+        res = std_response(success=False, msg="user not found")
+        return HttpResponse(res, status=404)
 
     # Are we logged in already?
     if user.api_key is not None:
         # If so, kill the request
-        return HttpResponse('user logged in already', status=403)
+        res = std_response(success=False, msg='user already logged in')
+        return HttpResponse(res, status=403)
     
     # generate apik -- check/refresh it until it doesn't exist
     try:
@@ -111,7 +118,9 @@ def authenticate(request):
         user.save()
         ret['apik'] = apik
 
-        return HttpResponse(json.dumps(ret))
+        # Serialize return data as a standard response
+        res = std_response(success=True, data=json.dumps(ret))
+        return HttpResponse(res)
 
 @csrf_exempt
 def logout(request):
@@ -136,7 +145,8 @@ def logout(request):
     user.api_key = None
     user.save()
 
-    return HttpResponse('success')
+    ret = std_response(success=True, msg='success')
+    return HttpResponse(ret)
 
 @csrf_exempt
 def verify_apik(request):
@@ -152,23 +162,23 @@ def verify_apik(request):
     try:
         user = YankUser.get(id__exact=data['uid'])
     except ObjectDoesNotExist as e:
-        jsonresponse = std_response(msg='valid apik', success=True, data=None)
-        return HttpResponse(jsonresponse, status=404)
+        res = std_response(msg='valid apik', success=True, data=None)
+        return HttpResponse(res)
 
     # verify that the APIK is not taken -- if it is, just boot the user and
     # keep on truckin'
-
     if user.api_key == None:
-        jsonresponse = std_response(msg='no apik', success=False, data=None)
-        return HttpResponse(jsonresponse, status=404)
+        res = std_response(msg='no apik', success=False, data=None)
+        return HttpResponse(res, status=404)
 
     elif user.api_key == data['apik']:
-        return HttpResponse(std_response(msg='valid apik', success=True, data=None))
+        res = std_response(msg='valid apik', success=True, data=None)
+        return HttpResponse(res)
 
     # boot user
     user.api_key = None
     user.save()
 
     # keep on truckin'
-    jsonresponse = std_response(msg='invalid apik', success=False, data=None)
-    return HttpResponse( jsonresponse, status=403)
+    res = std_response(msg='invalid apik', success=False, data=None)
+    return HttpResponse(res, status=403)
