@@ -57,7 +57,7 @@ def list_user(request):
         return HttpResponse(std_response)
 
     # User exists -- abort
-    res = std_response(success=True, msg="user exists")
+    res = std_response(success=False, msg="user exists")
     return HttpResponse(res, status=403)
 
 @csrf_exempt
@@ -96,7 +96,7 @@ def authenticate(request):
     # Are we logged in already?
     if user.api_key is not None:
         # If so, kill the request
-        res = std_response(success=False, msg='user already logged in')
+        res = std_response(success=True, msg='user already logged in')
         return HttpResponse(res, status=403)
     
     # generate apik -- check/refresh it until it doesn't exist
