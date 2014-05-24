@@ -57,7 +57,7 @@ def list_user(request):
         return HttpResponse(std_response)
 
     # User exists -- abort
-    res = std_response(success=False, msg="user exists")
+    res = std_response(success=True, msg="user exists")
     return HttpResponse(res, status=403)
 
 @csrf_exempt
