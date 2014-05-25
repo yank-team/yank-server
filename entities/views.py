@@ -13,7 +13,7 @@ from yank_server.helpers import screen_methods, screen_attrs, std_response, \
 
 from entities.helpers import globe_distance_angle_threshold
 
-import math, json
+import math, json, ast
 
 # basic functions -- post an entity
 
@@ -151,8 +151,8 @@ def list_entities_inside_radius(request, arg_lat=0.0, arg_lng=0.0, radius='5'):
     # radius given in kilometers
     # Calculate acceptable variation in degrees from the haversine formula
     radius    = map(int, radius)
-    arg_lat   = map(float, arg_lat)
-    arg_lng   = map(float, arg_lng)
+    arg_lat   = map(ast.literal_eval, arg_lat)
+    arg_lng   = map(ast.literal_eval, arg_lng)
     threshold = math.degrees(globe_distance_angle_threshold(radius))
 
     # now we let Django construct a SQL statement that will filter out the 
