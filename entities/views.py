@@ -82,7 +82,7 @@ class EntityNoteView(CSRFExemptMixin, View):
         try:
             note = EntityNote.objects.create(
                     owner=user,
-                    target=Entity.objects.get(id__exact=data['eid']),
+                    target=Entity.objects.get(id__exact=entity.id),
                     content=data['content']
                 )
             note.save()
