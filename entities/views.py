@@ -135,6 +135,37 @@ class EntityNoteCompoundPostView(CSRFExemptMixin, View):
             res = std_response(success=False, msg='entity not posted')
             return HttpResponse(res, status=404)
 
+class EntityRangeView(CSRFExemptMixin, View):
+
+    def post(self, request):
+
+        data = json.loads(request.read())
+
+         # radius given in kilometers
+        # Calculate acceptable variation in degrees from the haversine formula
+        radius    = map(int, radius)
+        threshold = math.degrees(globe_distance_angle_threshold(radius))
+
+        # now we let Django construct a SQL statement that will filter out the 
+        # relevant data for us.
+        entities = Entity.objects.filter(
+            lat__lte=data['lat']+threshold, 
+            lat__gte=data['lat']-threshold
+        ).filter(
+            lng__lte=data['lng']+threshold,
+            lng__gte=data['lng']-threshold
+        )
+
+        # The cool part of this is that these filters can catch the whole thing in
+        # one SQL statement thanks to Django's lazy-loading ORM. Booyah!
+
+        # Now we serialize and spit it all out
+        return HttpResponse(std_response(success=True, data=[
+            {'id': x.id, 'name': x.name, 'lat': x.lat, 'lng': x.lng}
+            for x in entities
+        ]))
+
+
 @csrf_exempt
 def list_notes(request, eid=1):
 
@@ -148,31 +179,4 @@ def list_notes(request, eid=1):
 @csrf_exempt
 def list_entities_inside_radius(request, arg_lat=0.0, arg_lng=0.0, radius='5'):
 
-    # radius given in kilometers
-    # Calculate acceptable variation in degrees from the haversine formula
-    radius    = map(int, radius)
-    arg_lat   = map(ast.literal_eval, arg_lat)
-    arg_lng   = map(ast.literal_eval, arg_lng)
-    threshold = math.degrees(globe_distance_angle_threshold(radius))
-
-    # now we let Django construct a SQL statement that will filter out the 
-    # relevant data for us.
-    entities = Entity.objects.filter(
-        lat__lte=arg_lat+threshold, 
-        lat__gte=arg_lat-threshold
-    ).filter(
-        lng__lte=arg_lng+threshold,
-        lng__gte=arg_lng-threshold
-    )
-
-    # The cool part of this is that these filters can catch the whole thing in
-    # one SQL statement thanks to Django's lazy-loading ORM. Booyah!
-
-    # Now we serialize and spit it all out
-    # TODO: move these list comprehensions out into "serializers.py" to make 
-    # everything more "DRY"
-    ret      = [
-        {'id': x.id, 'name': x.name, 'lat': x.lat, 'lng': x.lng}
-        for x in entities
-    ]
-    return HttpResponse(json.dumps(ret))
+   
