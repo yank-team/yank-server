@@ -11,22 +11,21 @@ from entities.helpers import globe_distance_angle_threshold
 
 import math, json
 
-
+@csrf_exempt
 class EntityView(View):
     """
     Either list or post entities to the DB
     """
 
-    # Generate a list of entities
-    @csrf_exempt
     def get(self, request):
+
+        # Serialize an entity list from the DB and return it
         res = std_response(success=True, data=[
             {'id': x.id, 'name': x.name, 'lat': x.lat, 'lng': x.lng}
             for x in Entity.objects.all()
         ])
         return HttpResponse(res)
 
-    @csrf_exempt
     def post(self, request):
 
         data = json.loads(request.read())
@@ -48,9 +47,9 @@ class EntityView(View):
         res = std_response(success=true, data={'eid': entity.id})
         return HttpResponse(res)
 
+@csrf_exempt
 class EntityNoteView(View):
 
-    @csrf_exempt
     def get(self, request):
         """
         get a list of notes
@@ -64,7 +63,6 @@ class EntityNoteView(View):
         ])
         return HttpResponse(res)
 
-    @csrf_exempt
     def post(self, request):
         """
         post a new note
@@ -74,6 +72,7 @@ class EntityNoteView(View):
         except ObjectDoesNotExist:
             res = std_response(success=False, msg='apik invalid')
             return HttpResponse(res, 403)
+
         # attempt to create note. Note: this should fail gracefully thanks to 
         # Django's default behavior
         try:
@@ -91,13 +90,27 @@ class EntityNoteView(View):
         return HttpResponse(res)
 
 @csrf_exempt
-def list_entities_inside_radius(request, radius='5'):
+class EntityRadiusView(View):
+
     """
     find entities within a given radius (in miles, because lol cubits) and list 
     them in much the same way we list them above.
 
     This call essentially implements the whole "nearby entities" feature
     """
+
+    def get(self, request):
+
+        # ensure this is a valid user
+        try:
+            user = YankUser.objects.get(api_key=data['apik'])
+        except ObjectDoesNotExist:
+            return HttpResponse('given API key is invalid', 403)
+
+"""
+@csrf_exempt
+def list_entities_inside_radius(request, radius='5'):
+
     # only GET allowed here
     if not screen_methods(request, ['POST']):
         return HttpResponse(status=405)
@@ -106,11 +119,7 @@ def list_entities_inside_radius(request, radius='5'):
     if not screen_attrs(data, ['apik', 'lat', 'lng']):
             return HttpResponse('improperly formatted request', status=400)
 
-    # ensure this is a valid user
-    try:
-        user = YankUser.objects.get(api_key=data['apik'])
-    except ObjectDoesNotExist:
-        return HttpResponse('given API key is invalid', 403)
+    
         
     # Calculate acceptable variation in degrees from the haversine formula
     radius = int(radius) 
@@ -137,3 +146,4 @@ def list_entities_inside_radius(request, radius='5'):
         for x in entities
     ]
     return HttpResponse(json.dumps(ret))
+"""
