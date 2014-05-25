@@ -12,12 +12,11 @@ from entities.helpers import globe_distance_angle_threshold
 
 import math, json
 
-@csrf_exempt
 class EntityView(View):
     """
     Either list or post entities to the DB
     """
-
+    @method_decorator(csrf_exempt)
     def get(self, request):
 
         # Serialize an entity list from the DB and return it
@@ -27,6 +26,7 @@ class EntityView(View):
         ])
         return HttpResponse(res)
 
+    @method_decorator(csrf_exempt)
     def post(self, request):
 
         data = json.loads(request.read())
@@ -48,9 +48,9 @@ class EntityView(View):
         res = std_response(success=true, data={'eid': entity.id})
         return HttpResponse(res)
 
-@csrf_exempt
 class EntityNoteView(View):
 
+    @method_decorator(csrf_exempt)
     def get(self, request):
         """
         get a list of notes
@@ -64,6 +64,7 @@ class EntityNoteView(View):
         ])
         return HttpResponse(res)
 
+    @method_decorator(csrf_exempt)
     def post(self, request):
         """
         post a new note
@@ -89,8 +90,7 @@ class EntityNoteView(View):
 
         res = std_response(success=True, data={'nid': note.id})
         return HttpResponse(res)
-
-@csrf_exempt
+        
 class EntityRadiusView(View):
 
     """
@@ -100,6 +100,7 @@ class EntityRadiusView(View):
     This call essentially implements the whole "nearby entities" feature
     """
 
+    @method_decorator(csrf_exempt)
     def get(self, request):
         data = json.loads(request.read())
 
