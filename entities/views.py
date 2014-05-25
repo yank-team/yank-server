@@ -11,7 +11,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from yank_server.helpers import screen_methods, screen_attrs, std_response, \
     CSRFExemptMixin
 
-from entities.helpers import haversine_dist
+from entities.helpers import globe_distance_angle_threshold
 
 import math, json
 
