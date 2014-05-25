@@ -150,12 +150,20 @@ def list_entities_inside_radius(request, arg_lat=0.0, arg_lng=0.0, radius='5'):
 
     # radius given in kilometers
     # Calculate acceptable variation in degrees from the haversine formula
-    radius    = int(radius) 
+    radius    = map(int, radius)
+    arg_lat   = map(float, arg_lat)
+    arg_lng   = map(float, arg_lng)
     threshold = math.degrees(globe_distance_angle_threshold(radius))
 
     # now we let Django construct a SQL statement that will filter out the 
     # relevant data for us.
-    entities = Entity.objects.filter(lat__lte=arg_lat+threshold, lat__gte=arg_lat-threshold)
+    entities = Entity.objects.filter(
+        lat__lte=arg_lat + threshold, 
+        lat__gte=arg_lat - threshold
+    ).filter(
+        lng__lte=arg_lng + threshold
+        lng__gte=arg_lng - threshold
+    )
 
     '''
     .filter(
