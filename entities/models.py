@@ -6,8 +6,8 @@ class Entity(models.Model):
     this is a thing in the physical world. It has a name and a location
     """
     name = models.CharField(max_length=98)
-    lat  = models.FloatField()
-    lng  = models.FloatField()
+    lat  = models.DecimalField()
+    lng  = models.DecimalField()
 
 class EntityNote(models.Model):
     """
