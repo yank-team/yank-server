@@ -37,3 +37,11 @@ def std_response(msg="", success=True, data=None):
         'msg'    : msg,
         'data'   : data
     })
+
+class CSRFExemptMixin(object):
+    """
+    Exempt a class-based view from CSRF
+    """
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(CSRFExemptMixin, self).dispatch(*args, **kwargs)

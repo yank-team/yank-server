@@ -6,19 +6,21 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 
+
 from django.views.generic import View
 from django.core.exceptions import ObjectDoesNotExist
 
-from yank_server.helpers import screen_methods, screen_attrs, std_response
+from yank_server.helpers import screen_methods, screen_attrs, std_response, \
+    CSRFExemptMixin
+
 from entities.helpers import globe_distance_angle_threshold
 
 import math, json
 
-class EntityView(View):
+class EntityView(CSRFExemptMixin, View):
     """
     Either list or post entities to the DB
     """
-    @method_decorator(csrf_exempt)
     def get(self, request):
 
         # Serialize an entity list from the DB and return it
@@ -28,7 +30,6 @@ class EntityView(View):
         ])
         return HttpResponse(res)
 
-    @method_decorator(csrf_exempt)
     def post(self, request):
 
         data = json.loads(request.read())
@@ -50,9 +51,8 @@ class EntityView(View):
         res = std_response(success=true, data={'eid': entity.id})
         return HttpResponse(res)
 
-class EntityNoteView(View):
+class EntityNoteView(CSRFExemptMixin, View):
 
-    @method_decorator(csrf_exempt)
     def get(self, request):
         """
         get a list of notes
@@ -66,7 +66,6 @@ class EntityNoteView(View):
         ])
         return HttpResponse(res)
 
-    @method_decorator(csrf_exempt)
     def post(self, request):
         """
         post a new note
@@ -93,7 +92,7 @@ class EntityNoteView(View):
         res = std_response(success=True, data={'nid': note.id})
         return HttpResponse(res)
 
-class EntityRadiusView(View):
+class EntityRadiusView(CSRFExemptMixin, View):
 
     """
     find entities within a given radius (in miles, because lol cubits) and list 
@@ -102,7 +101,6 @@ class EntityRadiusView(View):
     This call essentially implements the whole "nearby entities" feature
     """
 
-    @method_decorator(csrf_exempt)
     def get(self, request):
         data = json.loads(request.read())
 
