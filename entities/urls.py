@@ -12,6 +12,5 @@ urlpatterns = patterns('',
     url(r'^compound/$', EntityNoteCompoundPostView.as_view()),
 
     # Get entities within a radius
-    url(r'^radius/(?P<arg_lat>[0-9]\.[0-9]+)/(?P<arg_lng>[0-9]\.[0-9]+)/(?P<radius>[0-9]+)/$',
-        EntityRangeView.as_view()),
+    url(r'^radius/$', EntityRangeView.as_view()),
 )
