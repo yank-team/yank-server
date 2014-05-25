@@ -153,7 +153,14 @@ class EntityRadiusView(CSRFExemptMixin, View):
         except ObjectDoesNotExist:
             return HttpResponse('given API key is invalid', 403)
 
+@csrf_exempt
+def list_notes(request, eid=1):
 
+    # serialize data from DB and return it
+        res = std_response(success=True, data=[
+            {'id': x.id, 'owner': x.owner.id, 'content': x.content}
+            for x in EntityNote.objects.filter(owner__exact=eid)
+        return HttpResponse(res)
 
 """
 @csrf_exempt
