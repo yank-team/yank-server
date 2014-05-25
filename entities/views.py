@@ -152,11 +152,12 @@ def list_entities_inside_radius(request, lat=0.0, lng=0.0, radius='5'):
     # Calculate acceptable variation in degrees from the haversine formula
     radius    = int(radius) 
     threshold = math.degrees(globe_distance_angle_threshold(radius))
-
-    lat_max = lat+threshold 
-    lng_max = lng+threshold
-    lat_min = lat-threshold
-    lat_min = lat-threshold
+    lat_max,lng_max,lat_min,lat_min = map(unicode, [
+        lat+threshold, 
+        lng+threshold, 
+        lat-threshold, 
+        lat-threshold
+    ])
 
     # now we let Django construct a SQL statement that will filter out the 
     # relevant data for us.
