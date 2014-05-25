@@ -34,10 +34,9 @@ may be used to include a set of nearby points
 def haversin(theta):
     return (1-math.cos(theta))/2
 
-def globe_distance_angle_threshold(point, distance):
+def globe_distance_angle_threshold(distance):
     """
     calculate an angle threshold (in radians) for a given distance from a given 
     point. 
     """
     return haversin(distance/earth_radius())
-    

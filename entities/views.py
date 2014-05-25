@@ -148,9 +148,10 @@ def list_notes(request, eid=1):
 @csrf_exempt
 def list_entities_inside_radius(request, lat=0.0, lng=0.0, radius='5'):
 
+    # radius given in kilometers
     # Calculate acceptable variation in degrees from the haversine formula
     radius    = int(radius) 
-    threshold = math.degrees(globe_distance_angle_threshold())
+    threshold = math.degrees(globe_distance_angle_threshold(radius))
 
     # now we let Django construct a SQL statement that will filter out the 
     # relevant data for us.
