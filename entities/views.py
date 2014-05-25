@@ -57,7 +57,7 @@ class EntityNoteView(CSRFExemptMixin, View):
         """
         # serialize data from DB and return it
         res = std_response(success=True, data=[
-            {'id': x.id, 'owner': x.owner, 'content': x.content}
+            {'id': x.id, 'owner': x.owner.id, 'content': x.content}
             for x in EntityNote.objects.all()
         ])
         return HttpResponse(res)
@@ -78,9 +78,9 @@ class EntityNoteView(CSRFExemptMixin, View):
         # Django's default behavior
         try:
             note = EntityNote.objects.create(
-                owner=user,
-                target=Entity.objects.get(id__exact=data['eid']),
-                content=data['content']
+                    owner=user,
+                    target=Entity.objects.get(id__exact=data['eid']),
+                    content=data['content']
                 )
             note.save()
         except ObjectDoesNotExist:
