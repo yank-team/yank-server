@@ -143,8 +143,7 @@ class EntityRangeView(CSRFExemptMixin, View):
 
          # radius given in kilometers
         # Calculate acceptable variation in degrees from the haversine formula
-        radius    = map(int, radius)
-        threshold = math.degrees(globe_distance_angle_threshold(radius))
+        threshold = math.degrees(globe_distance_angle_threshold(data['radius']))
 
         # now we let Django construct a SQL statement that will filter out the 
         # relevant data for us.
@@ -175,4 +174,3 @@ def list_notes(request, eid=1):
             for x in EntityNote.objects.filter(owner__exact=eid)
         ])
         return HttpResponse(res)
-        
