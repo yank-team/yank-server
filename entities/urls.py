@@ -2,7 +2,7 @@ from django.conf.urls import patterns, url
 from entities import views
 
 from entities.views import EntityNoteCompoundPostView, EntityView, \
-    EntityNoteView 
+    EntityNoteView, EntityRangeView
 
 urlpatterns = patterns('',
     url(r'^$', EntityView.as_view()),
@@ -13,5 +13,5 @@ urlpatterns = patterns('',
 
     # Get entities within a radius
     url(r'^radius/(?P<arg_lat>[0-9]\.[0-9]+)/(?P<arg_lng>[0-9]\.[0-9]+)/(?P<radius>[0-9]+)/$',
-        'entities.views.list_entities_inside_radius'),
+        EntityRangeView.as_view()),
 )
