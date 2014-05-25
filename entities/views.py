@@ -155,11 +155,11 @@ def list_entities_inside_radius(request, arg_lat=0.0, arg_lng=0.0, radius='5'):
 
     # now we let Django construct a SQL statement that will filter out the 
     # relevant data for us.
-    entities = Entity.objects.filter(lat__lte=0.0, lat__gte=0.0)
+    entities = Entity.objects.filter(lat__lte=arg_lat+threshold, lat__gte=arg_lat-threshold)
 
     '''
     .filter(
-        lat__range(arg_lat-threshold, arg_lat+threshold)).filter(
+        lat__range(, )).filter(
         lng__range(arg_lng-threshold, arg_lng+threshold))
     '''
 
