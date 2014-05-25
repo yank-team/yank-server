@@ -2,8 +2,8 @@
 yank_server.helpers
 various helper functions to make development easier
 """
-import json
 
+from django.utils.decorators import method_decorator
 import json
 
 def screen_methods(request, methods=['GET']):
