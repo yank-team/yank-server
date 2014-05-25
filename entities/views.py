@@ -175,8 +175,4 @@ def list_notes(request, eid=1):
             for x in EntityNote.objects.filter(owner__exact=eid)
         ])
         return HttpResponse(res)
-
-@csrf_exempt
-def list_entities_inside_radius(request, arg_lat=0.0, arg_lng=0.0, radius='5'):
-
-   
+        

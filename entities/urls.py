@@ -1,6 +1,5 @@
 from django.conf.urls import patterns, url
 from entities import views
-
 from entities.views import EntityNoteCompoundPostView, EntityView, \
     EntityNoteView, EntityRangeView
 
