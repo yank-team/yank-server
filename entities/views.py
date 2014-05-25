@@ -11,7 +11,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from yank_server.helpers import screen_methods, screen_attrs, std_response, \
     CSRFExemptMixin
 
-from entities.helpers import globe_distance_angle_threshold
+from entities.helpers import haversine_dist
 
 import math, json
 
@@ -135,24 +135,6 @@ class EntityNoteCompoundPostView(CSRFExemptMixin, View):
             res = std_response(success=False, msg='entity not posted')
             return HttpResponse(res, status=404)
 
-class EntityRadiusView(CSRFExemptMixin, View):
-
-    """
-    find entities within a given radius (in miles, because lol cubits) and list 
-    them in much the same way we list them above.
-
-    This call essentially implements the whole "nearby entities" feature
-    """
-
-    def get(self, request):
-        data = json.loads(request.read())
-
-        # ensure this is a valid user
-        try:
-            user = YankUser.objects.get(api_key=data['apik'])
-        except ObjectDoesNotExist:
-            return HttpResponse('given API key is invalid', 403)
-
 @csrf_exempt
 def list_notes(request, eid=1):
 
@@ -163,13 +145,12 @@ def list_notes(request, eid=1):
         ])
         return HttpResponse(res)
 
-"""
 @csrf_exempt
-def list_entities_inside_radius(request, radius='5'):
+def list_entities_inside_radius(request, lat=0.0, lng=0.0, radius='5'):
 
     # Calculate acceptable variation in degrees from the haversine formula
-    radius = int(radius) 
-    threshold = math.degrees(globe_distance_angle_threshold(radius))
+    radius    = int(radius) 
+    threshold = math.degrees(globe_distance_angle_threshold())
 
     # now we let Django construct a SQL statement that will filter out the 
     # relevant data for us.
@@ -192,4 +173,3 @@ def list_entities_inside_radius(request, radius='5'):
         for x in entities
     ]
     return HttpResponse(json.dumps(ret))
-"""

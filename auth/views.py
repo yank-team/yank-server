@@ -19,9 +19,9 @@ def list_user(request):
         users = YankUser.objects.all()
         ret = [
             {
-                'username': x.username,
+                'username'       : x.username,
                 'password_digest': x.password_digest,
-                'apik'    : x.api_key
+                'apik'           : x.api_key
             }
             for x in users
         ]

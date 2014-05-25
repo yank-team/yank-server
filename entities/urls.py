@@ -10,4 +10,8 @@ urlpatterns = patterns('',
     # url(r'^note/$', 'entities.views.list_notes'),
     url(r'^note/(?P<eid>[0-9]+)/$', 'entities.views.list_notes'),
     url(r'^compound/$', EntityNoteCompoundPostView.as_view()),
+
+    # Get entities within a radius
+    url(r'^radius/(?P<lat>[0-9]\.[0-9]+)/(?P<lng>[0-9]\.[0-9]+)/(?P<radius>[0-9]+)/$',
+        'entities.views.list_entities_inside_radius'),
 )
