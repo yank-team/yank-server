@@ -160,6 +160,7 @@ def list_notes(request, eid=1):
         res = std_response(success=True, data=[
             {'id': x.id, 'owner': x.owner.id, 'content': x.content}
             for x in EntityNote.objects.filter(owner__exact=eid)
+        ])
         return HttpResponse(res)
 
 """
