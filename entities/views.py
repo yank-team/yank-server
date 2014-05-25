@@ -79,7 +79,7 @@ class EntityNoteView(View):
             note = EntityNote.objects.create(
                 owner=user,
                 target=Entity.objects.get(id__exact=data['eid']),
-                content=data['note']
+                content=data['content']
                 )
             note.save()
         except ObjectDoesNotExist:
@@ -100,6 +100,7 @@ class EntityRadiusView(View):
     """
 
     def get(self, request):
+        data = json.loads(request.read())
 
         # ensure this is a valid user
         try:
@@ -111,16 +112,6 @@ class EntityRadiusView(View):
 @csrf_exempt
 def list_entities_inside_radius(request, radius='5'):
 
-    # only GET allowed here
-    if not screen_methods(request, ['POST']):
-        return HttpResponse(status=405)
-
-    data = json.loads(request.read())
-    if not screen_attrs(data, ['apik', 'lat', 'lng']):
-            return HttpResponse('improperly formatted request', status=400)
-
-    
-        
     # Calculate acceptable variation in degrees from the haversine formula
     radius = int(radius) 
     threshold = math.degrees(globe_distance_angle_threshold(radius))
