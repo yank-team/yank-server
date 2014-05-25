@@ -15,6 +15,9 @@ from entities.helpers import globe_distance_angle_threshold
 
 import math, json
 
+# basic functions -- post an entity
+
+
 class EntityView(CSRFExemptMixin, View):
     """
     Either list or post entities to the DB
@@ -90,6 +93,45 @@ class EntityNoteView(CSRFExemptMixin, View):
         res = std_response(success=True, data={'nid': note.id})
         return HttpResponse(res)
 
+class EntityNoteCompoundPostView(CSRFExemptMixin, View):
+
+    def post(self, request):
+        data = json.loads(request.read())
+
+        try:
+            user = YankUser.objects.get(api_key=data['apik'])
+        except ObjectDoesNotExist:
+            res = std_response(success=False, msg='apik not supplied')
+            return HttpResponse(res, 403)
+
+        # create and save the object
+        entity = Entity.objects.create(
+            name=data['name'],
+            lat=data['lat'],
+            lng=data['lng']
+        )
+        entity.save()
+
+        # attempt to create note. Note: this should fail gracefully thanks to 
+        # Django's default behavior
+        try:
+            note = EntityNote.objects.create(
+                    owner=user,
+                    target=entity.id,
+                    content=data['content']
+                )
+            note.save()
+
+            res = std_response(success=True, data={
+                'eid': entity.id, 
+                'nid': note.id
+            })
+            return HttpResponse(res)
+
+        except ObjectDoesNotExist:
+            res = std_response(success=False, msg='entity not posted')
+            return HttpResponse(res, status=404)
+
 class EntityRadiusView(CSRFExemptMixin, View):
 
     """
@@ -107,6 +149,8 @@ class EntityRadiusView(CSRFExemptMixin, View):
             user = YankUser.objects.get(api_key=data['apik'])
         except ObjectDoesNotExist:
             return HttpResponse('given API key is invalid', 403)
+
+
 
 """
 @csrf_exempt
