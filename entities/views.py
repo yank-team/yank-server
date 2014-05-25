@@ -158,18 +158,12 @@ def list_entities_inside_radius(request, arg_lat=0.0, arg_lng=0.0, radius='5'):
     # now we let Django construct a SQL statement that will filter out the 
     # relevant data for us.
     entities = Entity.objects.filter(
-        lat__lte=arg_lat + threshold, 
-        lat__gte=arg_lat - threshold
+        lat__lte=arg_lat+threshold, 
+        lat__gte=arg_lat-threshold
     ).filter(
-        lng__lte=arg_lng + threshold
-        lng__gte=arg_lng - threshold
+        lng__lte=arg_lng+threshold,
+        lng__gte=arg_lng-threshold
     )
-
-    '''
-    .filter(
-        lat__range(, )).filter(
-        lng__range(arg_lng-threshold, arg_lng+threshold))
-    '''
 
     # The cool part of this is that these filters can catch the whole thing in
     # one SQL statement thanks to Django's lazy-loading ORM. Booyah!
