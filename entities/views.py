@@ -26,7 +26,7 @@ class EntityView(CSRFExemptMixin, View):
 
         # Serialize an entity list from the DB and return it
         res = std_response(success=True, data=[
-            {'id': x.id, 'name': x.name, 'lat': x.lat, 'lng': x.lng}
+            {'eid': x.id, 'name': x.name, 'lat': x.lat, 'lng': x.lng}
             for x in Entity.objects.all()
         ])
         return HttpResponse(res)
@@ -60,7 +60,7 @@ class EntityNoteView(CSRFExemptMixin, View):
         """
         # serialize data from DB and return it
         res = std_response(success=True, data=[
-            {'id': x.id, 'owner': x.owner.id, 'content': x.content}
+            {'nid': x.id, 'owner': x.owner.id, 'content': x.content}
             for x in EntityNote.objects.all()
         ])
         return HttpResponse(res)
