@@ -1,0 +1,37 @@
+[
+    {
+        "name": "exercise structure",
+        "lat" :  36.994465,
+        "lng" : -122.053770
+    },
+    {
+        "name" : "field roller",
+        "lat"  :  36.992990,
+        "lng"  : -122.053606
+    },
+    {
+        "name" : "spirit drums",
+        "lat"  :  37.010085,
+        "lng"  : -122.066192,
+    },
+    {
+        "name" : "Porter totem pole",
+        "lat"  :  36.994968,
+        "lng"  : -122.065126
+    },
+    {
+        "name" : "Porter squiggle",
+        "lat"  :  36.993190,
+        "lng"  : -122.065168,
+    },
+    {
+        "name" : "owl's nest cafe",
+        "lat"  :  36.998762,
+        "lng"  : -122.066143
+    },
+    {
+        "name" : "science hill redwood tree",
+        "lat"  :  36.999214,
+        "lng"  : -122.061220
+    }
+]
