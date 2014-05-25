@@ -46,7 +46,7 @@ class EntityView(CSRFExemptMixin, View):
         )
         entity.save()
 
-        res = std_response(success=true, data={'eid': entity.id})
+        res = std_response(success=True, data={'eid': entity.id})
         return HttpResponse(res)
 
 class EntityNoteView(CSRFExemptMixin, View):
