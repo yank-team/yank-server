@@ -55,12 +55,10 @@ class EntityNoteView(CSRFExemptMixin, View):
         """
         get a list of notes
         """
-        data = json.loads(request.read())
-
         # serialize data from DB and return it
         res = std_response(success=True, data=[
             {'id': x.id, 'owner': x.owner, 'content': x.content}
-            for x in EntityNote.objects.filter(target=entity)
+            for x in EntityNote.objects.all()
         ])
         return HttpResponse(res)
 
@@ -68,6 +66,8 @@ class EntityNoteView(CSRFExemptMixin, View):
         """
         post a new note
         """
+        data = json.loads(request.read())
+
         try:
             user = YankUser.objects.get(api_key=data['apik'])
         except ObjectDoesNotExist:
