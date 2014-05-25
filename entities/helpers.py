@@ -26,17 +26,10 @@ def haversine_dist(lng1, lat1, lng2, lat2):
     c    = 2 * asin(sqrt(a))
     km   = 6367 * c
     return km
-
-"""
-Find the angle needed to get a rough-accuracy angle-radius around a point which 
-may be used to include a set of nearby points
-"""
-def haversin(theta):
-    return (1-math.cos(theta))/2
-
+    
 def globe_distance_angle_threshold(distance):
     """
     calculate an angle threshold (in radians) for a given distance from a given 
     point. 
     """
-    return haversin(distance/earth_radius())
+    return (1-cos(distance/earth_radius()))/2
