@@ -1,7 +1,8 @@
 from django.conf.urls import patterns, url
 from entities import views
 
-from entities.views import EntityView, EntityNoteView
+from entities.views import EntityNoteCompoundPostView, EntityView, \
+    EntityNoteView 
 
 urlpatterns = patterns('',
     url(r'^$', EntityView.as_view()),

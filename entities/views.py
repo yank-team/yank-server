@@ -94,7 +94,10 @@ class EntityNoteView(CSRFExemptMixin, View):
         return HttpResponse(res)
 
 class EntityNoteCompoundPostView(CSRFExemptMixin, View):
-
+    """
+    Compound note/entity post for the app... This may have the ability to 
+    replace both functions above.
+    """
     def post(self, request):
         data = json.loads(request.read())
 
