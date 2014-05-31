@@ -36,7 +36,7 @@ def list_user(request):
 
     if 'username' not in data or 'password' not in data:
         res = std_response(success=False, msg='bad request')
-        return HttpResponse(std_response, status=400)
+        return HttpResponse(res, status=400)
 
     # Check for user
     try:
