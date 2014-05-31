@@ -54,7 +54,7 @@ def list_user(request):
         user.save()
         
         res = std_response(success=True, msg='success')
-        return HttpResponse(std_response)
+        return HttpResponse(res)
 
     # User exists -- abort
     res = std_response(success=False, msg='user exists')
