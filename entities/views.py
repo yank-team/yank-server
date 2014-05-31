@@ -159,7 +159,7 @@ class EntityRangeView(CSRFExemptMixin, View):
 
         # Now we serialize and spit it all out
         return HttpResponse(std_response(success=True, data=[
-            {'eid': x.id, 'name': x.name, 'lat': x.lat, 'lng': x.lng}
+            {'eid': x.id, 'name': x.name, 'lat': float(x.lat), 'lng': float(x.lng)}
             for x in entities
         ]))
 
