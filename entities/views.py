@@ -138,10 +138,9 @@ class EntityNoteCompoundPostView(CSRFExemptMixin, View):
 class EntityRangeView(CSRFExemptMixin, View):
 
     def post(self, request):
-
         data = json.loads(request.read())
 
-         # radius given in kilometers
+        # radius given in kilometers
         # Calculate acceptable variation in degrees from the haversine formula
         threshold = math.degrees(globe_distance_angle_threshold(data['radius']))
 
@@ -160,7 +159,7 @@ class EntityRangeView(CSRFExemptMixin, View):
 
         # Now we serialize and spit it all out
         return HttpResponse(std_response(success=True, data=[
-            {'id': x.id, 'name': x.name, 'lat': x.lat, 'lng': x.lng}
+            {'eid': x.id, 'name': x.name, 'lat': x.lat, 'lng': x.lng}
             for x in entities
         ]))
 
