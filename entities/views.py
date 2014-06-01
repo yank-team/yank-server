@@ -16,8 +16,6 @@ from entities.helpers import globe_distance_angle_threshold
 import math, json, ast
 
 # basic functions -- post an entity
-
-
 class EntityView(CSRFExemptMixin, View):
     """
     Either list or post entities to the DB
@@ -26,7 +24,7 @@ class EntityView(CSRFExemptMixin, View):
 
         # Serialize an entity list from the DB and return it
         res = std_response(success=True, data=[
-            {'eid': x.id, 'name': x.name, 'lat': x.lat, 'lng': x.lng}
+            {'eid': x.id, 'name': x.name, 'lat': float(x.lat), 'lng': float(x.lng)}
             for x in Entity.objects.all()
         ])
         return HttpResponse(res)
