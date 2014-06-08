@@ -58,7 +58,7 @@ class EntityNoteView(CSRFExemptMixin, View):
         """
         # serialize data from DB and return it
         res = std_response(success=True, data=[
-            {'nid': x.id, 'owner': x.owner.id, 'content': x.content}
+            {'nid': x.id, 'owner': x.owner.username, 'content': x.content}
             for x in EntityNote.objects.all()
         ])
         return HttpResponse(res)
@@ -117,7 +117,7 @@ class EntityNoteCompoundPostView(CSRFExemptMixin, View):
         # Django's default behavior
         try:
             note = EntityNote.objects.create(
-                    owner=user.username,
+                    owner=user,
                     target=entity,
                     content=data['content']
                 )
