@@ -167,7 +167,7 @@ def list_notes(request, eid=1):
 
     # serialize data from DB and return it
         res = std_response(success=True, data=[
-            {'id': x.id, 'owner': x.owner.id, 'content': x.content}
+            {'id': x.id, 'owner': x.owner.username, 'content': x.content}
             for x in EntityNote.objects.filter(target__exact=eid)
         ])
         return HttpResponse(res)
