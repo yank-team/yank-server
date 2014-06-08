@@ -117,7 +117,7 @@ class EntityNoteCompoundPostView(CSRFExemptMixin, View):
         # Django's default behavior
         try:
             note = EntityNote.objects.create(
-                    owner=user,
+                    owner=user.username,
                     target=entity,
                     content=data['content']
                 )
